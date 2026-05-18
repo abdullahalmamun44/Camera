@@ -1,7 +1,15 @@
-function Cart(){
-    return(
-        <h1>Cart Page</h1>
-    )
-}
+<div className="navButtons">
 
-export default Cart
+<button className="loginBtn">
+Login
+</button>
+
+<button className="signupBtn">
+Sign Up
+</button>
+
+<button className="cart">
+<FaShoppingCart /> Cart
+</button>
+
+</div>
