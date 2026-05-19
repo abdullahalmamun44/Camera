@@ -1,0 +1,96 @@
+.cameraPage{
+
+padding:130px 8%;
+
+background:#f8fafc;
+
+min-height:100vh;
+}
+
+.cameraPage h1{
+
+font-size:50px;
+
+text-align:center;
+
+margin-bottom:50px;
+
+color:#003087;
+}
+
+.cameraGrid{
+
+display:grid;
+
+grid-template-columns:repeat(3,1fr);
+
+gap:30px;
+}
+
+.cameraCard{
+
+background:white;
+
+padding:20px;
+
+border-radius:30px;
+
+text-align:center;
+
+box-shadow:0 15px 40px rgba(0,0,0,.08);
+
+transition:.3s;
+}
+
+.cameraCard:hover{
+
+transform:translateY(-10px);
+}
+
+.cameraCard img{
+
+width:100%;
+
+height:250px;
+
+object-fit:cover;
+
+border-radius:20px;
+}
+
+.cameraCard h2{
+
+margin:20px 0;
+
+font-size:22px;
+}
+
+.cameraCard h3{
+
+color:#0070e0;
+
+margin-bottom:20px;
+}
+
+.cameraCard button{
+
+width:100%;
+
+padding:14px;
+
+border:none;
+
+border-radius:30px;
+
+background:linear-gradient(
+135deg,
+#0070e0,
+#003087
+);
+
+color:white;
+
+font-weight:bold;
+
+cursor:pointer;
+}

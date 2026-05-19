@@ -379,3 +379,143 @@ transform:translateY(-3px);
 background:#eef6ff;
 }
 
+.navbar a{
+
+text-decoration:none;
+
+color:#334155;
+
+font-weight:700;
+}
+
+.navbar a:hover{
+
+color:#0070e0;
+}
+.profileBox {
+  background: #eef6ff;
+  color: #003087;
+  padding: 13px 22px;
+  border-radius: 999px;
+  font-weight: 800;
+}
+
+.logoutBtn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 13px 24px;
+  border-radius: 999px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.profileIconBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #eef6ff;
+  color: #003087;
+  border: 2px solid #0070e0;
+  padding: 13px 24px;
+  border-radius: 999px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.profileIconBtn svg {
+  font-size: 22px;
+}
+
+.profileOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.profileModal {
+  width: 430px;
+  background: white;
+  padding: 40px;
+  border-radius: 35px;
+  text-align: center;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.25);
+  position: relative;
+}
+
+.closeProfile {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  border: none;
+  background: transparent;
+  font-size: 32px;
+  cursor: pointer;
+  color: #003087;
+}
+
+.bigProfileIcon {
+  font-size: 75px;
+  color: #0070e0;
+  margin-bottom: 15px;
+}
+
+.profileModal h2 {
+  color: #003087;
+  margin-bottom: 22px;
+}
+
+.profileModal p {
+  font-size: 17px;
+  color: #334155;
+  margin-bottom: 14px;
+}
+
+.profileModal input {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 14px;
+  border-radius: 15px;
+  border: 1px solid #d1d5db;
+  font-size: 16px;
+}
+
+.editProfileBtn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #0070e0, #003087);
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+  margin-top: 12px;
+}
+
+.logoutBtn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 999px;
+  background: #ef4444;
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+  margin-top: 12px;
+}
+
+.cancelBtn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 999px;
+  background: #e5e7eb;
+  color: #111827;
+  font-weight: 800;
+  cursor: pointer;
+  margin-top: 12px;
+}
