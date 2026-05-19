@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-
+import Lenses from "./pages/Lenses";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Cameras from "./pages/Cameras";
@@ -114,8 +114,10 @@ function App() {
             </li>
 
             <li>
-              <a href="#">Lenses</a>
-            </li>
+<Link to="/lenses">
+Lenses
+</Link>
+</li>
 
             <li>
               <a href="#">Accessories</a>
@@ -156,6 +158,7 @@ function App() {
 
         <Routes>
           <Route
+            
             path="/"
             element={
               <>
@@ -239,6 +242,10 @@ function App() {
           <Route path="/cameras" element={<Cameras />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route
+path="/lenses"
+element={<Lenses/>}
+/>
         </Routes>
 
         {showProfile && user && (
