@@ -1,0 +1,80 @@
+.adminPage {
+  min-height: 100vh;
+  padding: 140px 8%;
+  background: #f8fafc;
+  display: flex;
+  justify-content: center;
+}
+
+.adminCard {
+  width: 560px;
+  background: white;
+  padding: 45px;
+  border-radius: 35px;
+  box-shadow: 0 25px 70px rgba(0, 48, 135, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.adminCard h1 {
+  text-align: center;
+  color: #003087;
+  font-size: 36px;
+}
+
+.adminCard p {
+  text-align: center;
+  color: #64748b;
+  margin-bottom: 10px;
+}
+
+.adminCard input,
+.adminCard textarea,
+.adminCard select {
+  width: 100%;
+  padding: 15px;
+  border-radius: 16px;
+  border: 1px solid #d1d5db;
+  font-size: 16px;
+  outline: none;
+}
+
+.adminCard textarea {
+  min-height: 110px;
+  resize: none;
+}
+
+.adminCard input:focus,
+.adminCard textarea:focus,
+.adminCard select:focus {
+  border-color: #0070e0;
+}
+
+.adminCard button {
+  padding: 16px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #0070e0, #003087);
+  color: white;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.imageLabel{
+font-size:16px;
+font-weight:700;
+color:#003087;
+margin-top:10px;
+}
+
+.previewImage{
+
+width:100%;
+height:240px;
+object-fit:cover;
+border-radius:20px;
+border:1px solid #ddd;
+margin-top:15px;
+
+}

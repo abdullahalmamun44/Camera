@@ -519,3 +519,46 @@ color:#0070e0;
   cursor: pointer;
   margin-top: 12px;
 }
+
+
+.homeSectionTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.viewBtn {
+  border: none;
+  padding: 14px 28px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #0070e0, #003087);
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.stockIn {
+  display: block;
+  color: #16a34a;
+  font-weight: 900;
+  margin-bottom: 15px;
+}
+
+.stockOut {
+  display: block;
+  color: #dc2626;
+  font-weight: 900;
+  margin-bottom: 15px;
+}
+
+.card button:disabled,
+.buyBtn:disabled {
+  background: #9ca3af !important;
+  cursor: not-allowed;
+}
+
+.card p {
+  color: #64748b;
+  margin-bottom: 12px;
+}

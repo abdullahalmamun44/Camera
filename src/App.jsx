@@ -1,49 +1,25 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import Lenses from "./pages/Lenses";
+
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Cameras from "./pages/Cameras";
+import Lenses from "./pages/Lenses";
 import Accessories from "./pages/Accessories";
+import Admin from "./pages/Admin";
+import ProductDetails from "./pages/ProductDetails";
 
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import {
-  FaShoppingCart,
-  FaCamera,
-  FaStar,
-  FaUserCircle,
-} from "react-icons/fa";
+import { FaShoppingCart, FaCamera, FaUserCircle } from "react-icons/fa";
 
 function App() {
   const [user, setUser] = useState(null);
-  const [showProfile, setShowProfile] = useState(false);
-  const [editMode, setEditMode] = useState(false);
 
-  const [editForm, setEditForm] = useState({
-    full_name: "",
-    email: "",
+  const [homeProducts, setHomeProducts] = useState({
+    camera: [],
+    lens: [],
+    accessory: [],
   });
-
-  const products = [
-    {
-      name: "Canon EOS R50",
-      price: "$699",
-      image:
-        "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=900&q=80",
-    },
-    {
-      name: "Sony Alpha A6400",
-      price: "$899",
-      image:
-        "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=900&q=80",
-    },
-    {
-      name: "Nikon Z50",
-      price: "$799",
-      image:
-        "https://images.unsplash.com/photo-1495707902641-75cac588d2e9?auto=format&fit=crop&w=900&q=80",
-    },
-  ];
 
   useEffect(() => {
     fetch("http://localhost:8080/Camera/api/profile.php", {
@@ -53,47 +29,95 @@ function App() {
       .then((data) => {
         if (data.status === "success") {
           setUser(data.user);
-          setEditForm({
-            full_name: data.user.name,
-            email: data.user.email,
-          });
         }
       })
       .catch((err) => console.log(err));
+
+    loadHomeProducts();
   }, []);
 
-  const logoutUser = async () => {
-    const res = await fetch("http://localhost:8080/Camera/api/logout.php", {
-      credentials: "include",
-    });
-
-    const data = await res.json();
-    alert(data.message);
-
-    setUser(null);
-    setShowProfile(false);
-  };
-
-  const updateProfile = async () => {
-    const res = await fetch(
-      "http://localhost:8080/Camera/api/update_profile.php",
-      {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(editForm),
-      }
+  const loadHomeProducts = async () => {
+    const cam = await fetch(
+      "http://localhost:8080/Camera/api/get_products.php?category=camera"
+    );
+    const lens = await fetch(
+      "http://localhost:8080/Camera/api/get_products.php?category=lens"
+    );
+    const acc = await fetch(
+      "http://localhost:8080/Camera/api/get_products.php?category=accessory"
     );
 
-    const data = await res.json();
-    alert(data.message);
+    const camData = await cam.json();
+    const lensData = await lens.json();
+    const accData = await acc.json();
 
-    if (data.status === "success") {
-      setUser(data.user);
-      setEditMode(false);
-    }
+    setHomeProducts({
+      camera: camData.products.slice(0, 3),
+      lens: lensData.products.slice(0, 3),
+      accessory: accData.products.slice(0, 3),
+    });
+  };
+
+  const ProductSection = ({ title, text, products, link, buttonText }) => {
+    return (
+      <section className="products">
+        <div className="homeSectionTop">
+          <div>
+            <h2>{title}</h2>
+            <p className="sectionText">{text}</p>
+          </div>
+
+          <Link to={link}>
+            <button className="viewBtn">{buttonText}</button>
+          </Link>
+        </div>
+
+        <div className="productGrid">
+          {products.length === 0 ? (
+            <p>No products added yet.</p>
+          ) : (
+            products.map((product) => (
+              <div className="card" key={product.id}>
+                <img
+                  src={product.image_url}
+                  alt={product.title}
+                  onError={(e) => {
+                    e.target.src =
+                      "https://placehold.co/500x350?text=No+Image";
+                  }}
+                />
+
+                <h3>{product.title}</h3>
+
+                <p>
+                  {product.description && product.description.length > 50
+                    ? product.description.substring(0, 50) + "..."
+                    : product.description}
+                </p>
+
+                <h4>${product.price}</h4>
+
+                <span
+                  className={
+                    product.stock_status === "in_stock"
+                      ? "stockIn"
+                      : "stockOut"
+                  }
+                >
+                  {product.stock_status === "in_stock"
+                    ? `In Stock (${product.quantity})`
+                    : "Stock Out"}
+                </span>
+
+                <Link to={`/product/${product.id}`}>
+                  <button>View Details</button>
+                </Link>
+              </div>
+            ))
+          )}
+        </div>
+      </section>
+    );
   };
 
   return (
@@ -115,10 +139,8 @@ function App() {
             </li>
 
             <li>
-<Link to="/lenses">
-Lenses
-</Link>
-</li>
+              <Link to="/lenses">Lenses</Link>
+            </li>
 
             <li>
               <Link to="/accessories">Accessories</Link>
@@ -131,10 +153,7 @@ Lenses
 
           <div className="navButtons">
             {user ? (
-              <button
-                className="profileIconBtn"
-                onClick={() => setShowProfile(true)}
-              >
+              <button className="profileIconBtn">
                 <FaUserCircle />
                 Profile
               </button>
@@ -159,7 +178,6 @@ Lenses
 
         <Routes>
           <Route
-            
             path="/"
             element={
               <>
@@ -175,8 +193,15 @@ Lenses
                     </p>
 
                     <div className="buttons">
-                      <button className="primary">Shop Now</button>
-                      <button className="secondary">Explore Collection</button>
+                      <Link to="/cameras">
+                        <button className="primary">Shop Now</button>
+                      </Link>
+
+                      <Link to="/accessories">
+                        <button className="secondary">
+                          Explore Collection
+                        </button>
+                      </Link>
                     </div>
                   </div>
 
@@ -196,35 +221,29 @@ Lenses
                   <span>Panasonic</span>
                 </section>
 
-                <section className="products">
-                  <h2>Popular Cameras</h2>
+                <ProductSection
+                  title="Latest Cameras"
+                  text="Newest cameras added by admin"
+                  products={homeProducts.camera}
+                  link="/cameras"
+                  buttonText="View All Cameras"
+                />
 
-                  <p className="sectionText">
-                    Best selling cameras for creators and professionals
-                  </p>
+                <ProductSection
+                  title="Latest Lenses"
+                  text="Newest lenses added by admin"
+                  products={homeProducts.lens}
+                  link="/lenses"
+                  buttonText="View All Lenses"
+                />
 
-                  <div className="productGrid">
-                    {products.map((product, index) => (
-                      <div className="card" key={index}>
-                        <img src={product.image} alt={product.name} />
-
-                        <h3>{product.name}</h3>
-
-                        <div className="stars">
-                          <FaStar />
-                          <FaStar />
-                          <FaStar />
-                          <FaStar />
-                          <FaStar />
-                        </div>
-
-                        <h4>{product.price}</h4>
-
-                        <button>Add To Cart</button>
-                      </div>
-                    ))}
-                  </div>
-                </section>
+                <ProductSection
+                  title="Latest Accessories"
+                  text="Newest accessories added by admin"
+                  products={homeProducts.accessory}
+                  link="/accessories"
+                  buttonText="View All Accessories"
+                />
 
                 <section className="offer">
                   <h2>30% Off Camera Accessories</h2>
@@ -234,99 +253,22 @@ Lenses
                     prices.
                   </p>
 
-                  <button>View Deals</button>
+                  <Link to="/accessories">
+                    <button>View Deals</button>
+                  </Link>
                 </section>
               </>
             }
           />
 
           <Route path="/cameras" element={<Cameras />} />
+          <Route path="/lenses" element={<Lenses />} />
+          <Route path="/accessories" element={<Accessories />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path="/admin" element={<Admin />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/accessories" element={<Accessories />} />
-          <Route
-path="/lenses"
-element={<Lenses/>}
-/>
         </Routes>
-
-        {showProfile && user && (
-          <div className="profileOverlay">
-            <div className="profileModal">
-              <button
-                className="closeProfile"
-                onClick={() => {
-                  setShowProfile(false);
-                  setEditMode(false);
-                }}
-              >
-                ×
-              </button>
-
-              <FaUserCircle className="bigProfileIcon" />
-
-              <h2>User Profile</h2>
-
-              {!editMode ? (
-                <>
-                  <p>
-                    <strong>Name:</strong> {user.name}
-                  </p>
-
-                  <p>
-                    <strong>Email:</strong> {user.email}
-                  </p>
-
-                  <button
-                    className="editProfileBtn"
-                    onClick={() => setEditMode(true)}
-                  >
-                    Edit Profile
-                  </button>
-
-                  <button className="logoutBtn" onClick={logoutUser}>
-                    Logout
-                  </button>
-                </>
-              ) : (
-                <>
-                  <input
-                    type="text"
-                    value={editForm.full_name}
-                    onChange={(e) =>
-                      setEditForm({
-                        ...editForm,
-                        full_name: e.target.value,
-                      })
-                    }
-                  />
-
-                  <input
-                    type="email"
-                    value={editForm.email}
-                    onChange={(e) =>
-                      setEditForm({
-                        ...editForm,
-                        email: e.target.value,
-                      })
-                    }
-                  />
-
-                  <button className="editProfileBtn" onClick={updateProfile}>
-                    Save Changes
-                  </button>
-
-                  <button
-                    className="cancelBtn"
-                    onClick={() => setEditMode(false)}
-                  >
-                    Cancel
-                  </button>
-                </>
-              )}
-            </div>
-          </div>
-        )}
       </div>
     </BrowserRouter>
   );
