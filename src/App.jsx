@@ -4,6 +4,7 @@ import Lenses from "./pages/Lenses";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Cameras from "./pages/Cameras";
+import Accessories from "./pages/Accessories";
 
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import {
@@ -120,7 +121,7 @@ Lenses
 </li>
 
             <li>
-              <a href="#">Accessories</a>
+              <Link to="/accessories">Accessories</Link>
             </li>
 
             <li>
@@ -242,6 +243,7 @@ Lenses
           <Route path="/cameras" element={<Cameras />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/accessories" element={<Accessories />} />
           <Route
 path="/lenses"
 element={<Lenses/>}
