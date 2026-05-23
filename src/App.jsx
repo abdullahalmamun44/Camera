@@ -8,270 +8,461 @@ import Lenses from "./pages/Lenses";
 import Accessories from "./pages/Accessories";
 import Admin from "./pages/Admin";
 import ProductDetails from "./pages/ProductDetails";
+import Checkout from "./pages/Checkout";
+import Cart from "./pages/Cart";
 
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import { FaShoppingCart, FaCamera, FaUserCircle } from "react-icons/fa";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link
+} from "react-router-dom";
+
+import {
+  FaShoppingCart,
+  FaCamera,
+  FaUserCircle
+} from "react-icons/fa";
 
 function App() {
-  const [user, setUser] = useState(null);
 
-  const [homeProducts, setHomeProducts] = useState({
-    camera: [],
-    lens: [],
-    accessory: [],
-  });
+const [user,setUser]=useState(null);
 
-  useEffect(() => {
-    fetch("http://localhost:8080/Camera/api/profile.php", {
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status === "success") {
-          setUser(data.user);
-        }
-      })
-      .catch((err) => console.log(err));
+const [homeProducts,setHomeProducts]=useState({
 
-    loadHomeProducts();
-  }, []);
+camera:[],
+lens:[],
+accessory:[]
 
-  const loadHomeProducts = async () => {
-    const cam = await fetch(
-      "http://localhost:8080/Camera/api/get_products.php?category=camera"
-    );
-    const lens = await fetch(
-      "http://localhost:8080/Camera/api/get_products.php?category=lens"
-    );
-    const acc = await fetch(
-      "http://localhost:8080/Camera/api/get_products.php?category=accessory"
-    );
+});
 
-    const camData = await cam.json();
-    const lensData = await lens.json();
-    const accData = await acc.json();
+useEffect(()=>{
 
-    setHomeProducts({
-      camera: camData.products.slice(0, 3),
-      lens: lensData.products.slice(0, 3),
-      accessory: accData.products.slice(0, 3),
-    });
-  };
+fetch(
+"http://localhost:8080/Camera/api/profile.php",
+{
+credentials:"include"
+}
+)
 
-  const ProductSection = ({ title, text, products, link, buttonText }) => {
-    return (
-      <section className="products">
-        <div className="homeSectionTop">
-          <div>
-            <h2>{title}</h2>
-            <p className="sectionText">{text}</p>
-          </div>
+.then(res=>res.json())
 
-          <Link to={link}>
-            <button className="viewBtn">{buttonText}</button>
-          </Link>
-        </div>
+.then(data=>{
 
-        <div className="productGrid">
-          {products.length === 0 ? (
-            <p>No products added yet.</p>
-          ) : (
-            products.map((product) => (
-              <div className="card" key={product.id}>
-                <img
-                  src={product.image_url}
-                  alt={product.title}
-                  onError={(e) => {
-                    e.target.src =
-                      "https://placehold.co/500x350?text=No+Image";
-                  }}
-                />
+if(data.status==="success"){
 
-                <h3>{product.title}</h3>
+setUser(
+data.user
+);
 
-                <p>
-                  {product.description && product.description.length > 50
-                    ? product.description.substring(0, 50) + "..."
-                    : product.description}
-                </p>
+}
 
-                <h4>${product.price}</h4>
+})
 
-                <span
-                  className={
-                    product.stock_status === "in_stock"
-                      ? "stockIn"
-                      : "stockOut"
-                  }
-                >
-                  {product.stock_status === "in_stock"
-                    ? `In Stock (${product.quantity})`
-                    : "Stock Out"}
-                </span>
+.catch(err=>console.log(err));
 
-                <Link to={`/product/${product.id}`}>
-                  <button>View Details</button>
-                </Link>
-              </div>
-            ))
-          )}
-        </div>
-      </section>
-    );
-  };
+loadHomeProducts();
 
-  return (
-    <BrowserRouter>
-      <div className="home">
-        <nav className="navbar">
-          <div className="logo">
-            <FaCamera />
-            LensHub
-          </div>
+},[]);
 
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
 
-            <li>
-              <Link to="/cameras">Cameras</Link>
-            </li>
 
-            <li>
-              <Link to="/lenses">Lenses</Link>
-            </li>
+const loadHomeProducts=async()=>{
 
-            <li>
-              <Link to="/accessories">Accessories</Link>
-            </li>
+const cam=await fetch(
+"http://localhost:8080/Camera/api/get_products.php?category=camera"
+);
 
-            <li>
-              <a href="#">Contact</a>
-            </li>
-          </ul>
+const lens=await fetch(
+"http://localhost:8080/Camera/api/get_products.php?category=lens"
+);
 
-          <div className="navButtons">
-            {user ? (
-              <button className="profileIconBtn">
-                <FaUserCircle />
-                Profile
-              </button>
-            ) : (
-              <>
-                <Link to="/login">
-                  <button className="loginBtn">Login</button>
-                </Link>
+const acc=await fetch(
+"http://localhost:8080/Camera/api/get_products.php?category=accessory"
+);
 
-                <Link to="/register">
-                  <button className="signupBtn">Sign Up</button>
-                </Link>
-              </>
-            )}
+const camData=await cam.json();
+const lensData=await lens.json();
+const accData=await acc.json();
 
-            <button className="cart">
-              <FaShoppingCart />
-              Cart
-            </button>
-          </div>
-        </nav>
+setHomeProducts({
 
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                <section className="hero">
-                  <div className="heroText">
-                    <span className="tag">Premium Camera Store</span>
+camera:camData.products.slice(0,3),
+lens:lensData.products.slice(0,3),
+accessory:accData.products.slice(0,3)
 
-                    <h1>Capture Every Moment Like a Pro</h1>
+});
 
-                    <p>
-                      Explore professional cameras, lenses and accessories with
-                      a clean modern shopping experience.
-                    </p>
+};
 
-                    <div className="buttons">
-                      <Link to="/cameras">
-                        <button className="primary">Shop Now</button>
-                      </Link>
 
-                      <Link to="/accessories">
-                        <button className="secondary">
-                          Explore Collection
-                        </button>
-                      </Link>
-                    </div>
-                  </div>
 
-                  <div className="heroImage">
-                    <img
-                      src="https://images.unsplash.com/photo-1512790182412-b19e6d62bc39?auto=format&fit=crop&w=1000&q=80"
-                      alt="camera"
-                    />
-                  </div>
-                </section>
+const ProductSection=({
 
-                <section className="brands">
-                  <span>Canon</span>
-                  <span>Sony</span>
-                  <span>Nikon</span>
-                  <span>Fujifilm</span>
-                  <span>Panasonic</span>
-                </section>
+title,
+text,
+products,
+link,
+buttonText
 
-                <ProductSection
-                  title="Latest Cameras"
-                  text="Newest cameras added by admin"
-                  products={homeProducts.camera}
-                  link="/cameras"
-                  buttonText="View All Cameras"
-                />
+})=>{
 
-                <ProductSection
-                  title="Latest Lenses"
-                  text="Newest lenses added by admin"
-                  products={homeProducts.lens}
-                  link="/lenses"
-                  buttonText="View All Lenses"
-                />
+return(
 
-                <ProductSection
-                  title="Latest Accessories"
-                  text="Newest accessories added by admin"
-                  products={homeProducts.accessory}
-                  link="/accessories"
-                  buttonText="View All Accessories"
-                />
+<section className="products">
 
-                <section className="offer">
-                  <h2>30% Off Camera Accessories</h2>
+<div className="homeSectionTop">
 
-                  <p>
-                    Get premium lenses, tripods and camera bags at special
-                    prices.
-                  </p>
+<div>
 
-                  <Link to="/accessories">
-                    <button>View Deals</button>
-                  </Link>
-                </section>
-              </>
-            }
-          />
+<h2>{title}</h2>
 
-          <Route path="/cameras" element={<Cameras />} />
-          <Route path="/lenses" element={<Lenses />} />
-          <Route path="/accessories" element={<Accessories />} />
-          <Route path="/product/:id" element={<ProductDetails />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Routes>
-      </div>
-    </BrowserRouter>
-  );
+<p className="sectionText">
+
+{text}
+
+</p>
+
+</div>
+
+<Link to={link}>
+
+<button className="viewBtn">
+
+{buttonText}
+
+</button>
+
+</Link>
+
+</div>
+
+<div className="productGrid">
+
+{
+products.length===0
+?
+
+<p>No products added yet</p>
+
+:
+
+products.map(product=>(
+
+<div
+className="card"
+key={product.id}
+>
+
+<img
+src={product.image_url}
+alt={product.title}
+onError={(e)=>{
+
+e.target.src=
+"https://placehold.co/500x350?text=No+Image"
+
+}}
+/>
+
+<h3>
+
+{product.title}
+
+</h3>
+
+<p>
+
+{
+product.description &&
+product.description.length>50
+
+?
+
+product.description.substring(0,50)+"..."
+
+:
+
+product.description
+}
+
+</p>
+
+<h4>
+
+${product.price}
+
+</h4>
+
+<span
+className={
+product.stock_status==="in_stock"
+?
+"stockIn"
+:
+"stockOut"
+}
+>
+
+{
+product.stock_status==="in_stock"
+?
+`In Stock (${product.quantity})`
+:
+"Stock Out"
+}
+
+</span>
+
+<Link
+to={`/product/${product.id}`}
+>
+
+<button>
+
+View Details
+
+</button>
+
+</Link>
+
+</div>
+
+))
+
+}
+
+</div>
+
+</section>
+
+)
+
+};
+
+
+
+return(
+
+<BrowserRouter>
+
+<div className="home">
+
+<nav className="navbar">
+
+<div className="logo">
+
+<FaCamera/>
+
+LensHub
+
+</div>
+
+<ul>
+
+<li>
+<Link to="/">
+Home
+</Link>
+</li>
+
+<li>
+<Link to="/cameras">
+Cameras
+</Link>
+</li>
+
+<li>
+<Link to="/lenses">
+Lenses
+</Link>
+</li>
+
+<li>
+<Link to="/accessories">
+Accessories
+</Link>
+</li>
+
+</ul>
+
+
+<div className="navButtons">
+
+{
+
+user
+
+?
+
+<button className="profileIconBtn">
+
+<FaUserCircle/>
+
+{user.name}
+
+</button>
+
+:
+
+<>
+
+<Link to="/login">
+
+<button className="loginBtn">
+
+Login
+
+</button>
+
+</Link>
+
+<Link to="/register">
+
+<button className="signupBtn">
+
+Sign Up
+
+</button>
+
+</Link>
+
+</>
+
+}
+
+
+<Link to="/cart">
+
+<button className="cart">
+
+<FaShoppingCart/>
+
+Cart
+
+</button>
+
+</Link>
+
+</div>
+
+</nav>
+
+
+
+<Routes>
+
+<Route
+path="/"
+element={
+<>
+
+<section className="hero">
+
+<div className="heroText">
+
+<span className="tag">
+
+Premium Camera Store
+
+</span>
+
+<h1>
+
+Capture Every Moment Like a Pro
+
+</h1>
+
+<p>
+
+Explore professional cameras, lenses and accessories with a clean modern shopping experience.
+
+</p>
+
+<div className="buttons">
+
+<Link to="/cameras">
+
+<button className="primary">
+
+Shop Now
+
+</button>
+
+</Link>
+
+<Link to="/accessories">
+
+<button className="secondary">
+
+Explore Collection
+
+</button>
+
+</Link>
+
+</div>
+
+</div>
+
+<div className="heroImage">
+
+<img
+src="https://images.unsplash.com/photo-1512790182412-b19e6d62bc39?auto=format&fit=crop&w=1000&q=80"
+alt=""
+/>
+
+</div>
+
+</section>
+
+
+<ProductSection
+title="Latest Cameras"
+text="Newest cameras added by admin"
+products={homeProducts.camera}
+link="/cameras"
+buttonText="View All Cameras"
+/>
+
+<ProductSection
+title="Latest Lenses"
+text="Newest lenses added by admin"
+products={homeProducts.lens}
+link="/lenses"
+buttonText="View All Lenses"
+/>
+
+<ProductSection
+title="Latest Accessories"
+text="Newest accessories added by admin"
+products={homeProducts.accessory}
+link="/accessories"
+buttonText="View All Accessories"
+/>
+
+</>
+}
+/>
+
+<Route path="/cameras" element={<Cameras/>}/>
+<Route path="/lenses" element={<Lenses/>}/>
+<Route path="/accessories" element={<Accessories/>}/>
+<Route path="/product/:id" element={<ProductDetails/>}/>
+<Route path="/checkout/:id" element={<Checkout/>}/>
+<Route path="/cart" element={<Cart/>}/>
+<Route path="/admin" element={<Admin/>}/>
+<Route path="/login" element={<Login/>}/>
+<Route path="/register" element={<Register/>}/>
+
+</Routes>
+
+</div>
+
+</BrowserRouter>
+
+)
+
 }
 
 export default App;
